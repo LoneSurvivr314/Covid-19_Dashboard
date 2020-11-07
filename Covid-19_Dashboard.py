@@ -3,9 +3,10 @@ import COVID19Py
 import json
 from bokeh.plotting import figure, show, output_file
 from bokeh.models import ColumnDataSource, HoverTool
-from bokeh.tile_providers import CARTODBPOSITRON_RETINA, get_provider
+from bokeh.tile_providers import CARTODBPOSITRON_RETINA, WIKIMEDIA, STAMEN_TERRAIN_RETINA, get_provider
 import pandas as pd
 import numpy as np
+import random as rand
 
 #Sets up API
 covid19 = COVID19Py.COVID19("http://127.0.0.1:8000", data_source="jhu")
@@ -22,22 +23,45 @@ def timeline(country):
 #Returns a dict{Deaths: list of deaths, Confirmed: list of cases, Latitude: list of latitudes, Longitude: list of longitudes}
 #Data should be from covid19.getLocations()
 def world_data(data):
-    death_list = []
+    #Sets up lists
+    death_list = [] 
     case_list = []
     lat_list = []
     long_list = []
+    population_list = []
+    country_list = []
+    province_list = []
+    update_list = []
+
     for country in data:
-        if country['province'] == '':
+        if country['country_code'] != 'US':
+            #Adds deaths and cases
             death_list.append(country['latest']['deaths'])
             case_list.append(country['latest']['confirmed'])
+
             #Converts lat and long to web mercator coordinates
             long_list.append(float(country['coordinates']['longitude']) * (6378137 * np.pi/180.0))
             lat_list.append(np.log(np.tan((90 + float(country['coordinates']['latitude'])) * np.pi/360.0)) * 6378137)
+
+            #Adds Country + Province name and population
+            population_list.append(country['country_population'])
+            country_list.append(country['country'])
+            if country["province"] == '':
+                province_list.append('N/A')
+            else:
+                province_list.append(country['province'])
+
+            #Adds last updated date
+            update_list.append(pd.to_datetime(country['last_updated']))
     return({
         'Deaths': death_list,
         'Confirmed': case_list,
         'Latitude': lat_list,
-        'Longitude': long_list
+        'Longitude': long_list,
+        'Population': population_list,
+        'Country': country_list,
+        'Province': province_list,
+        'Last_Updated': update_list
         })
 
 #Sets up plot
@@ -53,8 +77,26 @@ raw_data = covid19.getLocations()
 covid_data = world_data(raw_data)
 bokeh_covid_data = ColumnDataSource(data = covid_data)
 
-print(covid_data)
+with open(r'C:\Users\BUILD-01\Desktop\covidfile.txt', 'w') as file:
+    file.write(str(raw_data))
 
 #Plots data on the map
-m.circle(x = "Longitude", y = "Latitude", size = 15, color = "red", source = bokeh_covid_data)
+m.circle(x = "Longitude", y = "Latitude", size = 15, color = (rand.randint(0,255), rand.randint(0,255), rand.randint(0,255)), source = bokeh_covid_data)
+m.add_tools(HoverTool(
+    tooltips = 
+    [
+    ("Cases", "@Confirmed{0,0}"),
+    ("Deaths", "@Deaths{0,0}"),
+    ("Country", "@Country"),
+    ("Province", "@Province"),
+    ("Country Population", "@Population{0,0}"),
+    ("Last Updated", "@Last_Updated{%B %d, %Y}")
+    ],
+    #Format 'Dates' column as a date
+    formatters = 
+    {
+        "@Last_Updated": "datetime"
+    },
+))
+
 show(m)
