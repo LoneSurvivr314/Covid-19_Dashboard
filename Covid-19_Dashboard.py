@@ -8,9 +8,6 @@ import pandas as pd
 import numpy as np
 import random as rand
 
-#Sets up API
-covid19 = COVID19Py.COVID19("http://127.0.0.1:8000", data_source="jhu")
-
 #Returns a dict {Dates: List of bokeh-format dates, Confirmed: timeline of cases, Deaths: timeline of deaths}
 def timeline(country):
     location_data = covid19.getLocationByCountryCode(str(country), timelines=True)
@@ -72,10 +69,19 @@ geo_data = get_provider(CARTODBPOSITRON_RETINA)
 m = figure(x_axis_type = "mercator", y_axis_type = "mercator", x_range=(-2000000, 6000000), y_range=(-1000000, 7000000))
 m.add_tile(geo_data)
 
-#sets up covid19 data to display on map
+#sets up covid19 data to display on map, not US
+covid19 = COVID19Py.COVID19("http://127.0.0.1:8000", data_source="jhu")
+
 raw_data = covid19.getLocations()
 covid_data = world_data(raw_data)
+
+#sets up covid19 data to display on map, US only
+covid19 = COVID19Py.COVID19("http://127.0.0.1:8000", data_source="csbs")
+raw_data = covid19.getLocations()
+
+#Sets up ColumnDataSource for Bokeh
 bokeh_covid_data = ColumnDataSource(data = covid_data)
+
 
 with open(r'C:\Users\BUILD-01\Desktop\covidfile.txt', 'w') as file:
     file.write(str(raw_data))
