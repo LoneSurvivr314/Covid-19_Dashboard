@@ -61,6 +61,8 @@ def world_data(data):
         'Last_Updated': update_list
         })
 
+def US_data:
+    
 #Sets up plot
 output_file('covid_map.html')
 
