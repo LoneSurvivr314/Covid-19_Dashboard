@@ -62,7 +62,7 @@ def world_data(data):
         })
     
 #Sets up plot
-output_file('covid_map.html')
+#output_file('covid_map.html')
 
 #Setps up geo data
 geo_data = get_provider(CARTODBPOSITRON_RETINA)
