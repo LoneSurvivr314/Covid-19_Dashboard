@@ -87,8 +87,8 @@ def StatesFromCounties(counties):
     country_list = []
     province_list = []
     update_list = []
-    for county in counties:
-        
+    county_temp = ""
+#    for county in counties:
 
 #Sets up ColumnDataSource for Bokeh
 bokeh_covid_data = ColumnDataSource(data = covid_data)
