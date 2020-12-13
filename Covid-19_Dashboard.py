@@ -78,7 +78,7 @@ covid_data = world_data(raw_data)
 #sets up covid19 data to display on map, US only
 covid19 = COVID19Py.COVID19("http://127.0.0.1:8000", data_source="csbs")
 raw_data = covid19.getLocations()
-def StatesFromCounties(counties):
+def US_county_data(counties):
     death_list = [] 
     case_list = []
     lat_list = []
@@ -88,7 +88,8 @@ def StatesFromCounties(counties):
     province_list = []
     update_list = []
     county_temp = ""
-    for county in counties:
+#    for county in counties:
+    
         
 
 #Sets up ColumnDataSource for Bokeh
