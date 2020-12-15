@@ -37,8 +37,12 @@ def world_data(data):
             case_list.append(country['latest']['confirmed'])
 
             #Converts lat and long to web mercator coordinates
-            long_list.append(float(country['coordinates']['longitude']) * (6378137 * np.pi/180.0))
-            lat_list.append(np.log(np.tan((90 + float(country['coordinates']['latitude'])) * np.pi/360.0)) * 6378137)
+            if country['coordinates']['longitude'] != '' and country['coordinates']['latitude'] != '':
+                long_list.append(float(country['coordinates']['longitude']) * (6378137 * np.pi/180.0))
+                lat_list.append(np.log(np.tan((90 + float(country['coordinates']['latitude'])) * np.pi/360.0)) * 6378137)
+            else:
+                long_list.append(float(0))
+                lat_list.append(float(0))
 
             #Adds Country + Province name and population
             population_list.append(country['country_population'])
@@ -50,6 +54,15 @@ def world_data(data):
 
             #Adds last updated date
             update_list.append(pd.to_datetime(country['last_updated']))
+    print(len(death_list))
+    print(len(case_list))
+    print(len(lat_list))
+    print(len(long_list))
+    print(len(population_list))
+    print(len(country_list))
+    print(len(province_list))
+    print(len(update_list))
+    
     return({
         'Deaths': death_list,
         'Confirmed': case_list,
@@ -73,6 +86,10 @@ m.add_tile(geo_data)
 covid19 = COVID19Py.COVID19("http://127.0.0.1:8000", data_source="jhu")
 
 raw_data = covid19.getLocations()
+
+with open(r'C:\Users\BUILD-01\Desktop\covidfile.txt', 'w') as file:
+    file.write(str(raw_data))
+
 covid_data = world_data(raw_data)
 
 #sets up covid19 data to display on map, US only
@@ -96,8 +113,6 @@ def US_county_data(counties):
 bokeh_covid_data = ColumnDataSource(data = covid_data)
 
 
-with open(r'C:\Users\BUILD-01\Desktop\covidfile.txt', 'w') as file:
-    file.write(str(raw_data))
 
 #Plots data on the map
 m.circle(x = "Longitude", y = "Latitude", size = 15, color = (rand.randint(0,255), rand.randint(0,255), rand.randint(0,255)), source = bokeh_covid_data)
