@@ -8,6 +8,8 @@ import pandas as pd
 import numpy as np
 import random as rand
 
+#cd C:\\Users\\BUILD-01\\Desktop\\coronavirus-tracker-api-master & pipenv run dev
+
 #Returns a dict {Dates: List of bokeh-format dates, Confirmed: timeline of cases, Deaths: timeline of deaths}
 def timeline(country):
     location_data = covid19.getLocationByCountryCode(str(country), timelines=True)
