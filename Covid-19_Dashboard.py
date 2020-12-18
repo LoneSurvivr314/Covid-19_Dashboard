@@ -75,7 +75,7 @@ def world_data(data):
         })
     
 #Sets up plot
-output_file('covid_map.html')
+#output_file('covid_map.html')
 
 #Setps up geo data
 geo_data = get_provider(CARTODBPOSITRON_RETINA)
@@ -115,7 +115,7 @@ bokeh_covid_data = ColumnDataSource(data = covid_data)
 
 
 #Plots data on the map
-m.circle(x = "Longitude", y = "Latitude", size = 15, color = (rand.randint(0,255), rand.randint(0,255), rand.randint(0,255)), source = bokeh_covid_data)
+m.circle(x = "Longitude", y = "Latitude", size = 15, color = (rand.randint(0,255), rand.randint(0,255), rand.randint(0,255), .75), source = bokeh_covid_data)
 m.add_tools(HoverTool(
     tooltips = 
     [
