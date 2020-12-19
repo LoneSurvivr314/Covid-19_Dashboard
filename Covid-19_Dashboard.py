@@ -11,7 +11,7 @@ import random as rand
 #New Computer
     #cd C:\\Users\\BUILD-01\\Desktop\\coronavirus-tracker-api-master & pipenv run dev
 #Old Computer
-    #cd C:\Users\Old_02\coronavirus-tracker-api & pipenv run dev
+    #cd C:\\Users\Old_02\coronavirus-tracker-api & pipenv run dev
 
 #Returns a dict {Dates: List of bokeh-format dates, Confirmed: timeline of cases, Deaths: timeline of deaths}
 def timeline(country):
@@ -95,8 +95,8 @@ covid_data = world_data(raw_data)
 bokeh_covid_data = ColumnDataSource(data = covid_data)
 
 #Plots data on the map
-m.circle(name = 'Cases', x = 'Longitude', y = 'Latitude', size = 'Case_Size', color = (255, 155, 0, .7), source = bokeh_covid_data)
-m.circle(name = 'Deaths', x = 'Longitude', y = 'Latitude', size = 'Death_Size', color = (255, 0, 0, .7), source = bokeh_covid_data)
+m.circle(name = 'Cases', x = 'Longitude', y = 'Latitude', size = 'Case_Size', fill_color = (255, 125, 0, 1), line_color = (0, 0, 0, 0), source = bokeh_covid_data)
+m.circle(name = 'Deaths', x = 'Longitude', y = 'Latitude', size = 'Death_Size', fill_color = (255, 0, 0, .7), source = bokeh_covid_data)
 
 m.add_tools(HoverTool(
     tooltips = 
