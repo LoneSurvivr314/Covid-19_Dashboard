@@ -95,8 +95,8 @@ covid_data = world_data(raw_data)
 bokeh_covid_data = ColumnDataSource(data = covid_data)
 
 #Plots data on the map
-m.circle(name = 'Cases', x = 'Longitude', y = 'Latitude', size = 'Case_Size', fill_color = (255, 125, 0, 1), line_color = (0, 0, 0, 0), source = bokeh_covid_data)
-m.circle(name = 'Deaths', x = 'Longitude', y = 'Latitude', size = 'Death_Size', fill_color = (255, 0, 0, .7), source = bokeh_covid_data)
+m.circle(name = 'Cases', x = 'Longitude', y = 'Latitude', size = 'Case_Size', fill_color = (255, 125, 0, .7), line_color = (0, 0, 0, 1), source = bokeh_covid_data)
+m.circle(name = 'Deaths', x = 'Longitude', y = 'Latitude', size = 'Death_Size', fill_color = (255, 0, 0, .7), line_color =(0, 0, 0, 1), source = bokeh_covid_data)
 
 m.add_tools(HoverTool(
     tooltips = 
