@@ -7,4 +7,5 @@ import numpy as np
 import random as rand
 import geopandas as gpd
 
-m = figure(x_axis_type = 'mercator', y_axis_type = 'mercator', x_range = (-2000000, 6000000), y_range = (-1000000, 7000000), sizing_mode = 'stretch_both')
+shapefile = gpd.read_file(r'C:\Users\BUILD-01\Documents\GitHub\Covid-19_Dashboard\World_Countries__Generalized_-shp\World_Countries__Generalized_.shp')
+print(shapfile)
