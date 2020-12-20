@@ -1,6 +1,5 @@
 #import libraries
 import COVID19Py
-import json
 from bokeh.plotting import figure, show, output_file
 from bokeh.models import ColumnDataSource, HoverTool
 from bokeh.tile_providers import CARTODBPOSITRON_RETINA, WIKIMEDIA, STAMEN_TERRAIN_RETINA, get_provider
