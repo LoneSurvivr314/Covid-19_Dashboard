@@ -7,6 +7,7 @@ from bokeh.tile_providers import CARTODBPOSITRON_RETINA, WIKIMEDIA, STAMEN_TERRA
 import pandas as pd
 import numpy as np
 import random as rand
+import geopandas as gpd
 
 #New Computer
     #cd C:\\Users\\BUILD-01\\Desktop\\coronavirus-tracker-api-master & pipenv run dev
