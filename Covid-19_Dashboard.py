@@ -78,7 +78,7 @@ def world_data(data):
 
 #Setps up geo data
 geo_data = get_provider(CARTODBPOSITRON_RETINA)
-m = figure(x_axis_type = 'mercator', y_axis_type = 'mercator', x_range=(-2000000, 6000000), y_range=(-1000000, 7000000))
+m = figure(x_axis_type = 'mercator', y_axis_type = 'mercator', x_range = (-2000000, 6000000), y_range = (-1000000, 7000000), sizing_mode = 'stretch_both')
 m.add_tile(geo_data)
 
 #sets up covid19 data to display on map, not US
