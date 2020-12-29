@@ -1,12 +1,12 @@
 #import libraries
 import COVID19Py
-import json
 from bokeh.plotting import figure, show, output_file
 from bokeh.models import ColumnDataSource, HoverTool
 from bokeh.tile_providers import CARTODBPOSITRON_RETINA, WIKIMEDIA, STAMEN_TERRAIN_RETINA, get_provider
 import pandas as pd
 import numpy as np
 import random as rand
+import geopandas as gpd
 
 #New Computer
     #cd C:\\Users\\BUILD-01\\Desktop\\coronavirus-tracker-api-master & pipenv run dev
@@ -52,22 +52,14 @@ def world_data(data):
             #Adds Country + Province name and population
             population_list.append(country['country_population'])
             country_list.append(country['country'])
-            if country["province"] == '':
+            if country['province'] == '':
                 province_list.append('N/A')
             else:
                 province_list.append(country['province'])
 
             #Adds last updated date
             update_list.append(pd.to_datetime(country['last_updated']))
-    print(len(death_list))
-    print(len(case_list))
-    print(len(lat_list))
-    print(len(long_list))
-    print(len(population_list))
-    print(len(country_list))
-    print(len(province_list))
-    print(len(update_list))
-    
+
     return({
         'Deaths': death_list,
         'Confirmed': case_list,
@@ -76,7 +68,9 @@ def world_data(data):
         'Population': population_list,
         'Country': country_list,
         'Province': province_list,
-        'Last_Updated': update_list
+        'Last_Updated': update_list,
+        'Death_Size': list(map(lambda x: np.log(x+1) * 2, death_list)),
+        'Case_Size': list(map(lambda x: np.log(x+1) * 2, case_list))
         })
     
 #Sets up plot
@@ -84,11 +78,11 @@ def world_data(data):
 
 #Setps up geo data
 geo_data = get_provider(CARTODBPOSITRON_RETINA)
-m = figure(x_axis_type = "mercator", y_axis_type = "mercator", x_range=(-2000000, 6000000), y_range=(-1000000, 7000000))
+m = figure(x_axis_type = 'mercator', y_axis_type = 'mercator', x_range = (-2000000, 6000000), y_range = (-1000000, 7000000), sizing_mode = 'stretch_both')
 m.add_tile(geo_data)
 
 #sets up covid19 data to display on map, not US
-covid19 = COVID19Py.COVID19("http://127.0.0.1:8000", data_source="jhu")
+covid19 = COVID19Py.COVID19('http://127.0.0.1:8000', data_source='jhu')
 
 raw_data = covid19.getLocations()
 
@@ -97,45 +91,32 @@ with open(r'C:\Users\BUILD-01\Desktop\covidfile.txt', 'w') as file:
 
 covid_data = world_data(raw_data)
 
-#sets up covid19 data to display on map, US only
-covid19 = COVID19Py.COVID19("http://127.0.0.1:8000", data_source="csbs")
-raw_data = covid19.getLocations()
-def US_county_data(counties):
-    death_list = [] 
-    case_list = []
-    lat_list = []
-    long_list = []
-    population_list = []
-    country_list = []
-    province_list = []
-    update_list = []
-    county_temp = ""
-#    for county in counties:
-    
-        
-
 #Sets up ColumnDataSource for Bokeh
 bokeh_covid_data = ColumnDataSource(data = covid_data)
 
-
-
 #Plots data on the map
-m.circle(x = "Longitude", y = "Latitude", size = 15, color = (rand.randint(0,255), rand.randint(0,255), rand.randint(0,255), .75), source = bokeh_covid_data)
+m.circle(name = 'Cases', x = 'Longitude', y = 'Latitude', size = 'Case_Size', fill_color = (255, 125, 0, .7), line_color = (0, 0, 0, 1), source = bokeh_covid_data)
+m.circle(name = 'Deaths', x = 'Longitude', y = 'Latitude', size = 'Death_Size', fill_color = (255, 0, 0, .7), line_color =(0, 0, 0, 1), source = bokeh_covid_data)
+
 m.add_tools(HoverTool(
     tooltips = 
     [
-    ("Cases", "@Confirmed{0,0}"),
-    ("Deaths", "@Deaths{0,0}"),
-    ("Country", "@Country"),
-    ("Province", "@Province"),
-    ("Country Population", "@Population{0,0}"),
-    ("Last Updated", "@Last_Updated{%B %d, %Y}")
+    ('Cases', '@Confirmed{0,0}'),
+    ('Deaths', '@Deaths{0,0}'),
+    ('Country', '@Country'),
+    ('Province', '@Province'),
+    ('Country Population', '@Population{0,0}'),
+    ('Last Updated', '@Last_Updated{%B %d, %Y}')
     ],
     #Format 'Dates' column as a date
     formatters = 
     {
-        "@Last_Updated": "datetime"
+        '@Last_Updated': 'datetime'
     },
+    names = 
+    [
+        'Cases'
+    ]
 ))
 
 show(m)
