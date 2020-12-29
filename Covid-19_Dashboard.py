@@ -11,7 +11,7 @@ import random as rand
 #New Computer
     #cd C:\\Users\\BUILD-01\\Desktop\\coronavirus-tracker-api-master & pipenv run dev
 #Old Computer
-    #cd C:\Users\Old_02\coronavirus-tracker-api & pipenv run dev
+    #cd C:\\Users\Old_02\coronavirus-tracker-api & pipenv run dev
 
 #Returns a dict {Dates: List of bokeh-format dates, Confirmed: timeline of cases, Deaths: timeline of deaths}
 def timeline(country):
